@@ -18,7 +18,7 @@ object Classification {
     val N: Int = arr.length
     val M: Int = arr(0).length
     val distMatrix: Array[Array[Double]] = Array.ofDim(M, M)
-    val weights: Array[Double] = Array.fill(M)(Random.nextDouble)
+    val weights: Array[Double] = Array.fill(N)(Random.nextDouble)
 
     for (i <- 0 until M; j <- 0 until M)
       distMatrix(i)(j) = Math.sqrt((for (l <- 0 until N)
@@ -28,11 +28,30 @@ object Classification {
   }
 
   def minDistRowColumn(arr: Array[Array[Double]]): (Double, Int, Int) = {
-    (for (row <- arr(0).indices; col <- arr(0).indices if row != col)
+    (for (row <- arr.indices; col <- arr(0).indices if row != col)
       yield (arr(row)(col), row, col)).minBy(_._1)
   }
 
+  def joinColumns(arr: Array[Array[Double]],
+                  col1: Int, col2: Int): Array[Double] = {
+    (for (i <- arr.indices)
+      yield Math.max(arr(i)(col1), arr(i)(col2))
+      ).toArray
+  }
+
+  def removeColumns(arr: Array[Array[Double]],
+                    col1: Int, col2: Int): Array[Array[Double]] = {
+    (for (i <- arr.indices) yield
+      (for (j <- arr(i).indices if j != col1 && j != col2)
+        yield arr(i)(j)).toArray
+      ).toArray
+  }
+
   def main(args: Array[String]): Unit = {
-    println("result: ")
+    val array: Array[Array[Double]] = Array.ofDim[Double](4, 4)
+    array(0) = Array(0, 1, 2, 3, 16)
+    array(1) = Array(4, 6, 5, 7, 17)
+    array(2) = Array(8, 9, 10, 11, 18)
+    array(3) = Array(12, 14, 13, 15, 19)
   }
 }
