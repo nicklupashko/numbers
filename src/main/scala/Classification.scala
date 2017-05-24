@@ -11,8 +11,8 @@ object Classification {
   dataSet(3) = Array(167.69, 186.1, 220.45, 169.3, 39.53, 40.41, 102.96, 37.02, 45.74, 40.07)
   dataSet(4) = Array(17.72,  18.39, 26.46,  22.37, 28.13, 17.55, 21.92,  19.52, 23.99, 21.76)
 
-  val clusters: Map[Int, String] =
-    (0 until numberOfFeatures).map(n => n -> n.toString).toMap
+  val clusters: List[String] =
+    (0 until numberOfFeatures).map(_.toString).toList
 
   def distanceMatrix(arr: Array[Array[Double]]): Array[Array[Double]] = {
     val N: Int = arr.length
@@ -32,24 +32,19 @@ object Classification {
       yield (arr(row)(col), row, col)).minBy(_._1)
   }
 
-  def joinColumns(arr: Array[Array[Double]],
-                  col1: Int, col2: Int): Array[Double] = {
-    (for (i <- arr.indices) yield
-      Math.max(arr(i)(col1), arr(i)(col2))
-      ).toArray
+  def addColumn(arr: Array[Array[Double]], col: Array[Double]): Array[Array[Double]] = {
+    (for (i <- arr.indices) yield arr(i) :+ col(i)).toArray
   }
 
-  def removeColumns(arr: Array[Array[Double]],
-                    col1: Int, col2: Int): Array[Array[Double]] = {
+  def joinColumns(arr: Array[Array[Double]], col1: Int, col2: Int): Array[Double] = {
+    (for (i <- arr.indices) yield Math.max(arr(i)(col1), arr(i)(col2))).toArray
+  }
+
+  def removeColumns(arr: Array[Array[Double]], col1: Int, col2: Int): Array[Array[Double]] = {
     (for (i <- arr.indices) yield
       (for (j <- arr(i).indices if j != col1 && j != col2)
         yield arr(i)(j)).toArray
       ).toArray
-  }
-
-  def addColumn(arr: Array[Array[Double]],
-                col: Array[Double]): Array[Array[Double]] = {
-    (for (i <- arr.indices) yield arr(i) :+ col(i)).toArray
   }
 
   def main(args: Array[String]): Unit = {
