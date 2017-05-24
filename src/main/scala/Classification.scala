@@ -28,14 +28,14 @@ object Classification {
   }
 
   def minDistRowColumn(arr: Array[Array[Double]]): (Double, Int, Int) = {
-    (for (row <- arr.indices; col <- arr(0).indices if row != col)
+    (for (row <- arr.indices; col <- arr(row).indices if row != col)
       yield (arr(row)(col), row, col)).minBy(_._1)
   }
 
   def joinColumns(arr: Array[Array[Double]],
                   col1: Int, col2: Int): Array[Double] = {
-    (for (i <- arr.indices)
-      yield Math.max(arr(i)(col1), arr(i)(col2))
+    (for (i <- arr.indices) yield
+      Math.max(arr(i)(col1), arr(i)(col2))
       ).toArray
   }
 
@@ -47,11 +47,18 @@ object Classification {
       ).toArray
   }
 
+  def addColumn(arr: Array[Array[Double]],
+                col: Array[Double]): Array[Array[Double]] = {
+    (for (i <- arr.indices) yield arr(i) :+ col(i)).toArray
+  }
+
   def main(args: Array[String]): Unit = {
     val array: Array[Array[Double]] = Array.ofDim[Double](4, 4)
-    array(0) = Array(0, 1, 2, 3, 16)
-    array(1) = Array(4, 6, 5, 7, 17)
-    array(2) = Array(8, 9, 10, 11, 18)
-    array(3) = Array(12, 14, 13, 15, 19)
+    array(0) = Array(0, 1, 2, 3)
+    array(1) = Array(4, 6, 5, 7)
+    array(2) = Array(8, 9, 10, 11)
+    array(3) = Array(12, 14, 13, 15)
+
+
   }
 }
