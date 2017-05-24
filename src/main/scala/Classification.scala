@@ -11,8 +11,7 @@ object Classification {
   dataSet(3) = Array(167.69, 186.1, 220.45, 169.3, 39.53, 40.41, 102.96, 37.02, 45.74, 40.07)
   dataSet(4) = Array(17.72,  18.39, 26.46,  22.37, 28.13, 17.55, 21.92,  19.52, 23.99, 21.76)
 
-  val clusters: List[String] =
-    (0 until numberOfFeatures).map(_.toString).toList
+  val clusters: List[String] = (0 until numberOfElements).map(_.toString).toList
 
   def distanceMatrix(arr: Array[Array[Double]]): Array[Array[Double]] = {
     val N: Int = arr.length
@@ -21,8 +20,8 @@ object Classification {
     val weights: Array[Double] = Array.fill(N)(Random.nextDouble)
 
     for (i <- 0 until M; j <- 0 until M)
-      distMatrix(i)(j) = Math.sqrt((for (l <- 0 until N)
-        yield weights(l) * Math.pow(arr(l)(i) - arr(l)(j), 2)).sum)
+      distMatrix(i)(j) = Math.sqrt((for (l <- 0 until N) yield
+        weights(l) * Math.pow(arr(l)(i) - arr(l)(j), 2)).sum)
 
     distMatrix
   }
@@ -42,9 +41,13 @@ object Classification {
 
   def removeColumns(arr: Array[Array[Double]], col1: Int, col2: Int): Array[Array[Double]] = {
     (for (i <- arr.indices) yield
-      (for (j <- arr(i).indices if j != col1 && j != col2)
-        yield arr(i)(j)).toArray
+      (for (j <- arr(i).indices if j != col1 && j != col2) yield arr(i)(j)).toArray
       ).toArray
+  }
+
+  def removeColumns(list: List[String], col1: Int, col2: Int): List[String] = {
+    (for (i <- list.indices if i != col1 && i != col2)
+      yield list(i)).toList :+ s"${list(col1)}, ${list(col2)}"
   }
 
   def main(args: Array[String]): Unit = {
@@ -53,7 +56,6 @@ object Classification {
     array(1) = Array(4, 6, 5, 7)
     array(2) = Array(8, 9, 10, 11)
     array(3) = Array(12, 14, 13, 15)
-
 
   }
 }
