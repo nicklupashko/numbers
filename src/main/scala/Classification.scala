@@ -11,7 +11,7 @@ object Classification {
   dataSet(3) = Array(167.69, 186.1, 220.45, 169.3, 39.53, 40.41, 102.96, 37.02, 45.74, 40.07)
   dataSet(4) = Array(17.72,  18.39, 26.46,  22.37, 28.13, 17.55, 21.92,  19.52, 23.99, 21.76)
 
-  val clusters: List[String] = (0 until numberOfElements).map(_.toString).toList
+  val clusterList: List[String] = (0 until numberOfElements).map(_.toString).toList
 
   def distanceMatrix(arr: Array[Array[Double]]): Array[Array[Double]] = {
     val N: Int = arr.length
@@ -50,12 +50,23 @@ object Classification {
       yield list(i)).toList :+ s"${list(col1)}, ${list(col2)}"
   }
 
-  def main(args: Array[String]): Unit = {
-    val array: Array[Array[Double]] = Array.ofDim[Double](4, 4)
-    array(0) = Array(0, 1, 2, 3)
-    array(1) = Array(4, 6, 5, 7)
-    array(2) = Array(8, 9, 10, 11)
-    array(3) = Array(12, 14, 13, 15)
+  def clustering(data: Array[Array[Double]], clusters: List[String],
+                 numberOfClusters: Int = 2): (Array[Array[Double]], List[String]) = {
+    val (_, r, c) = minDistRowColumn(distanceMatrix(data))
+    val newDataSet = addColumn(removeColumns(data, r, c), joinColumns(data, r, c))
+    val newClusters = removeColumns(clusters, r, c)
 
+    if (newDataSet(0).length == numberOfClusters) (newDataSet, newClusters)
+    else clustering(newDataSet, newClusters, numberOfClusters)
+  }
+
+  def main(args: Array[String]): Unit = {
+    val (data, clusters) = clustering(dataSet, clusterList)
+
+    println("Data: ")
+    data.foreach(row => println(row.mkString(", ")))
+
+    println("Clusters: ")
+    clusters.foreach(println)
   }
 }
