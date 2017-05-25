@@ -2,10 +2,10 @@ import scala.io.Source
 import scala.util.Random
 
 object Classification {
+
   val dataSet: Array[Array[Double]] = dataSetFromFile("data.txt")
 
-  val clusterList: List[String] =
-    (0 until dataSet.head.length).map(_.toString).toList
+  val clusterList: List[String] = (dataSet.head.indices).map(_.toString).toList
 
   def dataSetFromFile(filePath: String): Array[Array[Double]] = {
     val regex = """\d+(\.\d+)?""".r
