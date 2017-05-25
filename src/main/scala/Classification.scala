@@ -26,7 +26,7 @@ object Classification {
     distMatrix
   }
 
-  def minDistRowColumn(arr: Array[Array[Double]]): (Double, Int, Int) = {
+  def minDistanceRowColumn(arr: Array[Array[Double]]): (Double, Int, Int) = {
     (for (row <- arr.indices; col <- arr(row).indices if row != col)
       yield (arr(row)(col), row, col)).minBy(_._1)
   }
@@ -35,7 +35,7 @@ object Classification {
     (for (i <- arr.indices) yield arr(i) :+ col(i)).toArray
   }
 
-  def joinColumns(arr: Array[Array[Double]], col1: Int, col2: Int): Array[Double] = {
+  def joinedColumn(arr: Array[Array[Double]], col1: Int, col2: Int): Array[Double] = {
     (for (i <- arr.indices) yield Math.max(arr(i)(col1), arr(i)(col2))).toArray
   }
 
@@ -52,8 +52,8 @@ object Classification {
 
   def clustering(data: Array[Array[Double]], clusters: List[String],
                  numberOfClusters: Int = 2): (Array[Array[Double]], List[String]) = {
-    val (_, r, c) = minDistRowColumn(distanceMatrix(data))
-    val newDataSet = addColumn(removeColumns(data, r, c), joinColumns(data, r, c))
+    val (_, r, c) = minDistanceRowColumn(distanceMatrix(data))
+    val newDataSet = addColumn(removeColumns(data, r, c), joinedColumn(data, r, c))
     val newClusters = removeColumns(clusters, r, c)
 
     if (newDataSet(0).length == numberOfClusters) (newDataSet, newClusters)
