@@ -3,7 +3,7 @@ import scala.util.Random
 
 object Classification {
 
-  val dataSet: Array[Array[Double]] = dataSetFromFile("data.txt")
+  val dataSet: Array[Array[Double]] = dataSetFromFile("data10.txt")
 
   val clusterList: List[String] = dataSet.head.indices.map(_.toString).toList
 
