@@ -7,6 +7,8 @@ object Classification {
 
   val clusterList: List[String] = dataSet.head.indices.map(_.toString).toList
 
+  val weights: Array[Double] = Array.fill(dataSet.length)(Random.nextDouble)
+
   def dataSetFromFile(filePath: String): Array[Array[Double]] = {
     val regex = """\d+(\.\d+)?""".r
     Source.fromFile(filePath).getLines().toList
@@ -17,9 +19,8 @@ object Classification {
     val N: Int = arr.length
     val M: Int = arr(0).length
     val distMatrix: Array[Array[Double]] = Array.ofDim(M, M)
-    val weights: Array[Double] = Array.fill(N)(Random.nextDouble)
 
-    for (i <- 0 until M; j <- 0 until M)
+    for (i <- 0 until M; j <- (i + 1) until M)
       distMatrix(i)(j) = Math.sqrt((for (l <- 0 until N) yield
         weights(l) * Math.pow(arr(l)(i) - arr(l)(j), 2)).sum)
 
@@ -27,7 +28,7 @@ object Classification {
   }
 
   def minDistanceRowColumn(arr: Array[Array[Double]]): (Double, Int, Int) = {
-    (for (row <- arr.indices; col <- arr(row).indices if row != col)
+    (for (row <- arr.indices; col <- arr(row).indices if col > row)
       yield (arr(row)(col), row, col)).minBy(_._1)
   }
 
@@ -41,8 +42,8 @@ object Classification {
 
   def removeColumns(arr: Array[Array[Double]], col1: Int, col2: Int): Array[Array[Double]] = {
     (for (i <- arr.indices) yield
-      (for (j <- arr(i).indices if j != col1 && j != col2) yield arr(i)(j)).toArray
-      ).toArray
+      (for (j <- arr(i).indices if j != col1 && j != col2)
+        yield arr(i)(j)).toArray).toArray
   }
 
   def removeColumns(list: List[String], col1: Int, col2: Int): List[String] = {
