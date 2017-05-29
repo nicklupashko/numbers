@@ -53,12 +53,14 @@ object Classification {
 
   def clustering(data: Array[Array[Double]], clusters: List[String],
                  numberOfClusters: Int = 2): (Array[Array[Double]], List[String]) = {
-    val (_, r, c) = minDistanceRowColumn(distanceMatrix(data))
-    val newDataSet = addColumn(removeColumns(data, r, c), joinedColumn(data, r, c))
-    val newClusters = removeColumns(clusters, r, c)
-
-    if (newDataSet(0).length == numberOfClusters) (newDataSet, newClusters)
-    else clustering(newDataSet, newClusters, numberOfClusters)
+    if (clusters.length <= numberOfClusters)
+      (data, clusters)
+    else {
+      val (_, r, c) = minDistanceRowColumn(distanceMatrix(data))
+      val newDataSet = addColumn(removeColumns(data, r, c), joinedColumn(data, r, c))
+      val newClusters = removeColumns(clusters, r, c)
+      clustering(newDataSet, newClusters, numberOfClusters)
+    }
   }
 
   def main(args: Array[String]): Unit = {
