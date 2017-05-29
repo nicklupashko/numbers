@@ -53,7 +53,7 @@ object Classification {
 
   def clustering(data: Array[Array[Double]], clusters: List[String],
                  numberOfClusters: Int = 2): (Array[Array[Double]], List[String]) = {
-    if (clusters.length <= numberOfClusters)
+    if (data.head.length <= numberOfClusters)
       (data, clusters)
     else {
       val (_, r, c) = minDistanceRowColumn(distanceMatrix(data))
